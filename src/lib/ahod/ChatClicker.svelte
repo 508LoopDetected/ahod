@@ -6,6 +6,22 @@
     let totalClicks = 0;
     let message = '';
     let reply;
+    let npcChatScroll;
+     let chats = []; // This will hold our messages
+      
+      // Function to generate the HTML snippet
+      function generateHtmlSnippet() {
+        return `
+          <div class="npcWrap">
+              <div class="npc-pic">
+                  <img src="/ahod/background-blitz/larry.png" />
+              </div>
+              <div class="npc-msg">
+                  ...
+              </div>
+          </div>
+        `;
+      }
 
     let gameStarted = false;
     let soundWin;
@@ -31,12 +47,21 @@
         currentDiatribe = diatribes[Math.floor(Math.random() * diatribes.length)];
         totalClicks = 0;
         message = '';
+
+        const intervalId = setInterval(() => {
+          // Instead of directly manipulating the DOM, we're updating the Svelte store
+          chats = [...chats, generateHtmlSnippet()];
+        }, 2000);
+
+        return () => clearInterval(intervalId);
     }
 
     function handleClick() {
         if (totalClicks < 25) {
             totalClicks++;
             addWordsToDiatribe();
+        } else {
+            alert('done son');
         }
     }
 
@@ -55,82 +80,97 @@
             dispatch('lose');
         }
     }
-
     $: if (timeLeft <= 0) {
         checkResult();
     }
 </script>
 
 {#if gameStarted}
-    <div id="userReply" bind:this={reply}></div>
-    <div id="clickMe" on:click={handleClick}>
-        <div>Clicks: {totalClicks}</div>
+
+<div id="messenger">
+    <div id="chat">
+        {#each chats as chatHtml, index}
+            {@html chatHtml}
+        {/each}
     </div>
+    <div id="replyArea">
+        <div id="userReply" bind:this={reply}></div>
+        <div id="clickMe" on:click={handleClick}>
+            <div>Clicks: {totalClicks}</div>
+        </div>
+    </div>
+</div>
+
 {/if}
 
 <style>
+#messenger {
+    min-height: 600px;
+    max-height: 600px;
+    background-color: #777;
+    width: 100vw;
+    padding: 15px;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
+    grid-column-gap: 0;
+    grid-row-gap: 0;
+}
+
+#chat {
+    padding: 30px;
+    overflow: scroll;
+    border: 1px solid blue;
+    flex-direction: column-reverse;
+    display: flex;
+}
+
+#replyArea {
+    grid-area: 2 / 1;
+}
+
+:global(.npcWrap) {
+    display: flex;
+    justify-content: left;
+    margin-bottom: 30px;
+    animation: slideIn 1s ease-out;
+}
+:global(.npc-pic img) {
+    width: 64px;
+    overflow: hidden;
+    height: 64px;
+    object-fit: cover;
+    object-position: center center;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+    margin-right: 30px;
+}
+:global(.npc-msg) {
+    background-color: #aaa;
+    padding: 20px;
+}
+
 #clickMe {
     display: block;
     background: red;
-    margin: 0 auto 30px;
-    width: 300px;
+    margin: 0 auto;
+    width: 100%;
     height: 100px;
     cursor: pointer;
-}
-
-#browser {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-gap: 10px;
-    margin-bottom: 20px;
-    position: relative;
-    overflow: hidden;
-}
-
-#file-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-gap: 10px;
-    margin-bottom: 20px;
-    overflow: hidden;
-    min-height: 600px;
-}
-
-.file {
-    padding: 5px;
-    width: 100px;
-    height: 100px;
-    border: 1px solid #ddd;
-    background-color: #f0f0f0;
-    cursor: pointer;
-        position: absolute;
-        transition: top 0.5s, left 0.5s;
-}
-.file.uploaded {
-    opacity: 0.5;
-}
-
-#drop-zone {
-    margin-top: 20px;
-    padding: 10px;
-    border: 2px dashed #007bff;
-    text-align: center;
-    position: absolute;
-    right: 0;
-    width: 50%;
-    height: 600px;
 }
 
 #userReply {
     height: 200px;
     border: 2px outset grey;
-    width: 400px;
+    width: 100%;
     overflow-y: scroll;
     padding: 10px;
     margin-bottom: 20px;
     margin: 0 auto;
     background: #fff;
     text-align: left;
+    flex-direction: column-reverse;
+    display: flex;
 }
 
 button {
@@ -144,5 +184,10 @@ button {
 
 button:hover {
     background-color: #0056b3;
+}
+
+@keyframes slideIn {
+    0% { transform: translateX(-300%); }
+    100% { transform: translateX(0px); }
 }
 </style>

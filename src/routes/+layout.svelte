@@ -1,5 +1,6 @@
 <script>
-  import AHOD from '$lib/components/AHOD.svelte';
+  //import AHOD from '$lib/components/AHOD.svelte';
+  import ChatClicker from '$lib/ahod/ChatClicker.svelte';
 
   let showAHOD = false; // State to track whether to show AHOD
   function handleExit() {
@@ -9,7 +10,8 @@
 
 <main>
   {#if showAHOD}
-    <AHOD on:exit={handleExit} />
+    <!-- <AHOD on:exit={handleExit} /> -->
+    <ChatClicker on:exit={handleExit} />
   {:else}
     <button class="ahod" on:click={() => showAHOD = true}>All Hands on Deck!</button>
   {/if}
