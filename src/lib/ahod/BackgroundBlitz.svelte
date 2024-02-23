@@ -114,8 +114,8 @@
       {/each}
       <div id="playerTile" style={backgroundStyle} class="video-tile">
         <div id="controls">
-          <button on:click={() => changeBackground('left')}>Left</button>
-          <button on:click={() => changeBackground('right')}>Right</button>
+          <button on:click={() => changeBackground('left')}>&lsaquo;</button>
+          <button on:click={() => changeBackground('right')}>&rsaquo;</button>
         </div>
       </div>
   </div>
@@ -144,7 +144,7 @@
 }
 
 .video-tile .npc {
-    background-image: url('/ahod/background-blitz/larry.png');
+    background-image: url('/ahod/larry.png');
     background-size: contain;
     background-position: center bottom;
     background-repeat: no-repeat;
@@ -193,15 +193,24 @@
 }
 
 button {
-    padding: 10px 20px;
-    border: none;
-    background-color: #007bff;
-    color: white;
+    background-color: #ff0030;
+    border: 1px solid #000;
+    border-radius: 5px;
+    box-shadow: inset 1px 1px 0 rgba(255,255,255,0.4), 5px 5px 0 rgba(0,0,0,0.1);
+    text-shadow: -1px -1px 0 rgba(0,0,0,0.5);
+    color: #fff;
+    margin: 0 5px 15px;
+    padding: 5px 20px;
     cursor: pointer;
     transition: background-color 0.3s;
+    font-weight: normal;
+    text-transform: uppercase;
+    font-family: 'CooperBits Medium';
+    font-size: 2rem;
+    display: inline-block;
 }
 
 button:hover {
-    background-color: #0056b3;
+    background-color: #ff0030;
 }
 </style>

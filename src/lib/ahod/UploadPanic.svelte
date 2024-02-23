@@ -46,17 +46,16 @@
     }
 
     function getRandomPosition(width, height, yOffset = 0) {
-        const fileWidth = 100;
-        const fileHeight = 100;
+        const fileWidth = 100; // Width of the file elements
+        const fileHeight = 100; // Height of the file elements
         // Adjust x and y to account for the size of the file icons
         const x = Math.floor(Math.random() * (width - fileWidth));
-        const y = Math.floor(Math.random() * (height / 2 - fileHeight)) + yOffset;
+        const y = Math.floor(Math.random() * (height * 0.4 - fileHeight)) + yOffset; // Place files in the bottom 40%
         return {
             x: `${x}px`,
             y: `${y}px`
         };
     }
-
 
     function onMouseMove(event) {
         if (!isDragging || !currentFileElement) return;
@@ -80,8 +79,8 @@
         const mousePosX = event.clientX - browserRect.left;
         const mousePosY = event.clientY - browserRect.top;
 
-        // Check if drop is within the top half of #browser
-        if (mousePosY >= 0 && mousePosY <= browserRect.height / 2) {
+        // Check if drop is within the top 60% of #browser
+        if (mousePosY >= 0 && mousePosY <= browserRect.height * 0.6) {
             const newX = mousePosX - offsetX;
             const newY = mousePosY - offsetY;
 
@@ -128,15 +127,13 @@
         files = Array.from({ length: totalFiles }, (_, index) => ({
             id: index,
             uploaded: false,
-            // Pass the width of #browser and half its height to getRandomPosition
-            // yOffset is set to half the height to ensure it starts in the bottom half
-            position: getRandomPosition(browserRect.width, browserRect.height, browserRect.height / 2)
+            // yOffset is set to the height of the drop zone to ensure it starts in the bottom 40%
+            position: getRandomPosition(browserRect.width, browserRect.height, browserRect.height * 0.6)
         }));
         uploadedCount = 0;
     }
 
     function onDropFile(fileId) {
-        // Logic to handle when a file is dropped on the target area
         files = files.map(file => file.id === fileId ? {...file, uploaded: true} : file);
         uploadedCount = files.filter(file => file.uploaded).length;
         
@@ -144,36 +141,6 @@
         /*if (uploadedCount === files.length) {
             checkSelection();
         }*/
-    }
-
-    function onDragOver(event) {
-        event.preventDefault(); // Necessary to allow a drop
-    }
-
-    function onDrop(event, zone) {
-        event.preventDefault();
-        if (zone === 'drop-zone' && draggedFileId !== null) {
-            const dropZoneRect = document.getElementById('drop-zone').getBoundingClientRect();
-            files = files.map(file => {
-                if (file.id === draggedFileId) {
-                    return {
-                        ...file, 
-                        uploaded: true,
-                        position: {
-                            x: 50 + (Math.random() * 40), // Randomize within the right half
-                            y: Math.random() * 80
-                        }
-                    };
-                }
-                return file;
-            });
-
-            uploadedCount++;
-            /*if (uploadedCount === totalFiles) {
-                checkSelection();
-            }*/
-            draggedFileId = null;
-        }
     }
 
     function checkSelection() {
@@ -193,8 +160,7 @@
 
 <div id="browser">
     {#if gameStarted}
-        <div id="drop-zone" on:drop={(event) => onDrop(event, 'drop-zone')}
-             on:dragover={onDragOver}>
+        <div id="drop-zone">
           Drop files here
         </div>
         <div id="file-container">
@@ -221,9 +187,38 @@
     flex-direction: column;
 }
 
+#drop-zone {
+    display: flex;
+    align-content: center;
+    position: relative;
+    right: 0;
+    height: 60%;
+    flex-wrap: wrap;
+    background-color: #fff;
+    justify-content: center;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 1.5rem;
+    color: #aaa;
+}
+#drop-zone:after {
+    content: '';
+    position: absolute;
+    display: block;
+    border: 2px dashed #ccc;
+    width: 90%;
+    height: 82%;
+    left: 0;
+    right: 0;
+    margin: auto;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
 #file-container {
     background-color: #ccc;
-    height: 50%;
+    height: 40%;
+    border-top: 10px solid #aaa;
 }
 
 .file {
@@ -236,14 +231,5 @@
 
 .file.uploaded {
     opacity: 0.5;
-}
-
-#drop-zone {
-    border: 2px dashed #007bff;
-    text-align: center;
-    position: relative;
-    right: 0;
-    height: 50%;
-    background-color: #fff;
 }
 </style>

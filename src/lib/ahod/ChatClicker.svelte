@@ -20,7 +20,7 @@
         const scheduleId = setTimeout(() => {
             if (gameCompleted) return; // Check again due to async delay
 
-            const newMessage = { id: messageId, content: "...", animation: "slideIn 0.15s ease-out" };
+            const newMessage = { id: messageId, who: "npc", content: "...", animation: "slideIn 0.15s ease-out" };
             chats = [...chats, newMessage];
             
             let messageIndex = messageId % customMessages.length;
@@ -110,7 +110,7 @@
     }
 
     function addDiatribeMessage(diatribeText) {
-        chats = [...chats, { id: messageId++, content: diatribeText, animation: "slideIn 0.5s ease-out" }];
+        chats = [...chats, { id: messageId++, who: "player", content: diatribeText, animation: "slideIn 0.5s ease-out" }];
         if (soundOhNo) soundOhNo.play();
         reply.innerText = ''; // Clear the userReply content
     }
@@ -123,10 +123,10 @@
 {#if gameStarted}
 <div id="messenger">
     <div id="chat">
-        {#each chats as { id, content, animation }}
-            <div class="npcWrap message-container" style={animation}>
+        {#each chats as { id, who, content, animation }}
+            <div class="npcWrap {who}" style={animation}>
                 <div class="npc-pic">
-                    <img src="/ahod/background-blitz/larry.png" />
+                    <img src="/ahod/{who == 'player' ? 'hobbes' : 'larry'}.png" />
                 </div>
                 <div class="npc-msg">{content}</div>
             </div>
@@ -194,6 +194,23 @@
     box-shadow: inset 1px 1px 0 rgba(255,255,255,0.4), 5px 5px 0 rgba(0,0,0,0.1);
     text-align: left;
 }
+:global(.npcWrap.player) {
+    flex-direction: row-reverse;
+    transition: all 0.2s ease-out;
+    transform: rotate(-3deg) scale(1.1);
+    position: relative;
+    right: -20px;
+    width: 95%;
+    top: 10px;
+    animation: slideInAlt 0.15s ease-out;
+}
+:global(.npcWrap.player .npc-pic img) {
+    margin-left: 20px;
+    margin-right: 0px;
+    width: 84px;
+    height: 84px;
+    transition: all 0.2s ease-out;
+}
 
 #replyArea {
     display: flex;
@@ -257,5 +274,9 @@
 @keyframes slideIn {
     0% { transform: translateX(-100%); }
     100% { transform: translateX(0px); }
+}
+@keyframes slideInAlt {
+    0% { transform: translateX(100%) rotate(0deg) scale(1); }
+    100% { transform: translateX(0px) rotate(-3deg) scale(1.1); }
 }
 </style>
