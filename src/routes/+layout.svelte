@@ -1,8 +1,7 @@
 <script>
-  //import AHOD from '$lib/components/AHOD.svelte';
-  import ChatClicker from '$lib/ahod/ChatClicker.svelte';
+  import AHOD from '$lib/components/AHOD.svelte';
 
-  let showAHOD = false; // State to track whether to show AHOD
+  let showAHOD = false;
   function handleExit() {
     showAHOD = false;
   }
@@ -10,8 +9,7 @@
 
 <main>
   {#if showAHOD}
-    <!-- <AHOD on:exit={handleExit} /> -->
-    <ChatClicker on:exit={handleExit} />
+    <AHOD on:exit={handleExit} />
   {:else}
     <button class="ahod" on:click={() => showAHOD = true}>All Hands on Deck!</button>
   {/if}
@@ -22,6 +20,12 @@
 
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@300&display=swap');
+  @font-face {
+    font-family: 'CooperBits Medium';
+    font-style: normal;
+    font-weight: normal;
+    src: local('CooperBits Medium'), url('/fonts/CooperBits.woff') format('woff');
+  }
   :global(*) {
     box-sizing: border-box;
   }
@@ -53,7 +57,7 @@
     background-color: #000;
     border-radius: 5px;
     padding: 25px 40px 22px;
-    font-family: 'CooperBits', serif;
+    font-family: 'CooperBits Medium', serif;
     letter-spacing: 2px;
     color: #fff;
     border: none;

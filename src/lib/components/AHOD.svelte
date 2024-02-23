@@ -31,7 +31,7 @@
     let gamePairs = [
         { game: BackgroundBlitz, instruction: 'Conform!', details: 'Match your <strong>BACKDROP</strong> before the meeting starts!', timeLimit: 4.5 },
         { game: UploadPanic, instruction: 'Upload!', details: 'Deliver your <strong>FILES</strong> before the deadline!', timeLimit: 4.5 },
-        { game: ChatClicker, instruction: 'Respond!', details: 'Send a <strong>REBUTTAL</strong> before they gaslight you!', timeLimit: 4.5 }
+        { game: ChatClicker, instruction: 'Respond!', details: 'Send a <strong>REBUTTAL</strong> before they gaslight you!', timeLimit: 5.0 }
     ];
 
     $: timeLeftPercentage = (timeLeft / totalTime) * 100;
@@ -302,6 +302,9 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        -webkit-user-select: none; /* Safari */
+        -ms-user-select: none; /* IE 10 and IE 11 */
+        user-select: none; /* Standard syntax */
     }
 
     .start-screen {
@@ -386,7 +389,7 @@
         top: 30%;
         left: 5%;
         animation: instructionTextIn 2s ease-in-out;
-        font-family: 'CooperBits', serif;
+        font-family: 'CooperBits Medium', serif;
         text-shadow: 12px 7px 0 rgba(0,0,0,0.7);
     }
     #intro-screen .insttxt span {
@@ -466,7 +469,7 @@
         margin: 20px auto 0;
         border-radius: 0px;
         padding: 14px 40px 12px;
-        font-family: 'CooperBits', serif;
+        font-family: 'CooperBits Medium', serif;
         text-transform: none;
         color: #fff;
         letter-spacing: 2px;
@@ -621,7 +624,7 @@
         font-size: 1.7rem;
     }
     #end-screen .options h3 {
-        font-family: 'CooperBits', serif;
+        font-family: 'CooperBits Medium', serif;
         color: #fff;
         font-size: 3.5rem;
         font-style: italic;

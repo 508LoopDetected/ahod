@@ -14,7 +14,7 @@
         '/ahod/background-blitz/closet.gif',
         '/ahod/background-blitz/outside.gif',
         '/ahod/background-blitz/giygas.gif',
-        '/ahod/background-blitz/space.gif',
+        // '/ahod/background-blitz/space.gif',
         //'/ahod/background-blitz/graveyard.png'
     ];
 
@@ -107,8 +107,9 @@
 {#if gameStarted}
   <div id="video-call-grid">
       {#each revealedBackgrounds as background, index}
-          <div class="video-tile" style={`background-image: url(${shuffling[index] ? backgrounds[background] : backgrounds[correctBackgroundIndex]});`}>
-              <div class={`npc ${revealClass[index] ? 'reveal' : ''}`}></div>
+          <div class={`video-tile ${revealClass[index] ? 'reveal' : ''}`} style={`background-image: url(${shuffling[index] ? backgrounds[background] : backgrounds[correctBackgroundIndex]});`}>
+            <div class="npc"></div>
+            <div class="joining">Joining...</div>
           </div>
       {/each}
       <div id="playerTile" style={backgroundStyle} class="video-tile">
@@ -138,6 +139,9 @@
     position: relative;
     overflow: hidden;
 }
+.video-tile {
+    filter: grayscale(100%);
+}
 
 .video-tile .npc {
     background-image: url('/ahod/background-blitz/larry.png');
@@ -153,13 +157,27 @@
     margin: auto;
     filter: brightness(0);
 }
-.video-tile .npc.reveal {
+.video-tile .joining {
+    text-align: center;
+    font-size: 2.5rem;
+    color: #fff;
+    position: absolute;
+    top: 40%;
+    width: 100%;
+}
+
+#playerTile,
+.video-tile.reveal,
+.video-tile.reveal .npc {
     filter: unset;
+}
+.video-tile.reveal .joining {
+    display: none;
 }
 
 #playerTile {
-    position: relative; /* For positioning background images */
-    background-color: #ccc; /* Placeholder color */
+    position: relative;
+    background-color: #ccc;
     background-size: cover;
     background-position: center center;
 }
