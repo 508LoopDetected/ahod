@@ -104,17 +104,7 @@
     }
 
 
-    onMount(() => {
-        startGame();
-        document.addEventListener('mousemove', onMouseMove);
-        document.addEventListener('mouseup', onMouseUp);
-    });
-
-    // clean up yo' event listeners
-    onDestroy(() => {
-        document.removeEventListener('mousemove', onMouseMove);
-        document.removeEventListener('mouseup', onMouseUp);
-    });
+    onMount(startGame);
 
 
     function startGame() {
@@ -175,6 +165,8 @@
         </div>
     {/if}
 </div>
+
+<svelte:window on:mousemove={onMouseMove} on:mouseup={onMouseUp} />
 
 <style>
 #browser {
