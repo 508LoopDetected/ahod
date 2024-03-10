@@ -23,6 +23,9 @@
     let soundWin;
     let soundLose;
 
+    // Elements
+    let browserEl;
+
 
     function getImagePath(fileId) {
         return `/ahod/upload-panic/file${fileId + 1}.png`;
@@ -60,7 +63,7 @@
     function onMouseMove(event) {
         if (!isDragging || !currentFileElement) return;
 
-        const browserRect = document.getElementById('browser').getBoundingClientRect();
+        const browserRect = browserEl.getBoundingClientRect();
         let newX = event.clientX - browserRect.left - offsetX;
         let newY = event.clientY - browserRect.top - offsetY;
 
@@ -75,7 +78,7 @@
     function onMouseUp(event) {
         if (!isDragging || !currentFileElement) return;
 
-        const browserRect = document.getElementById('browser').getBoundingClientRect();
+        const browserRect = browserEl.getBoundingClientRect();
         const mousePosX = event.clientX - browserRect.left;
         const mousePosY = event.clientY - browserRect.top;
 
@@ -104,7 +107,9 @@
     }
 
 
-    onMount(startGame);
+    onMount(() => {
+        startGame()
+    });
 
 
     function startGame() {
@@ -113,7 +118,7 @@
         soundLose = new Audio('/ahod/audio/lose.wav');
 
         // Get the dimensions of #browser to pass to getRandomPosition
-        const browserRect = document.getElementById('browser').getBoundingClientRect();
+        const browserRect = browserEl.getBoundingClientRect();
         files = Array.from({ length: totalFiles }, (_, index) => ({
             id: index,
             uploaded: false,
@@ -148,20 +153,20 @@
     }
 </script>
 
-<div id="browser">
+<div id="browser" bind:this={browserEl}>
     {#if gameStarted}
         <div id="drop-zone">
-          Drop files here
+            Drop files here
         </div>
         <div id="file-container">
-          {#each files as file (file.id)}
-            <img class={`file ${file.uploaded ? 'uploaded' : ''}`}
-                 src={getImagePath(file.id)}
-                 alt={`File ${file.id + 1}`}
-                 style="left: {file.position.x}; top: {file.position.y};"
-                 on:mousedown={(event) => onMouseDown(event, file.id)}
-                 draggable="false" /> <!-- Images are draggable by default, so we disable it -->
-          {/each}
+            {#each files as file (file.id)}
+                <img class={`file ${file.uploaded ? 'uploaded' : ''}`}
+                    src={getImagePath(file.id)}
+                    alt={`File ${file.id + 1}`}
+                    style="left: {file.position.x}; top: {file.position.y};"
+                    on:mousedown={(event) => onMouseDown(event, file.id)}
+                    draggable="false" /> <!-- Images are draggable by default, so we disable it -->
+            {/each}
         </div>
     {/if}
 </div>
